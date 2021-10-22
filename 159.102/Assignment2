@@ -1,0 +1,140 @@
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <iomanip>
+using namespace std;
+
+int getopcode(int digitOne);//Gets the first digit of the instruction and returns it to Main
+int getoperand(int lastDigits);//Gets the last three digits of the instruction and returns them to Main
+void display(int memLocation, int instrReg);//Displays the memory location and instruction register number with the correct display
+
+fstream instrfile;
+string filename;
+int memory[256] = {0};
+int reg[16] = {0};
+int pc, ir;
+
+int main(){
+  int line, i, number = 0, opcode, operand, temp, secondNum, thirdNum, lastTwo;
+  cout <<"Enter the FULL name of the file: ";
+  getline(cin, filename);
+  instrfile.open(filename.c_str(),fstream::in);//opens the specified file for reading
+  if (instrfile.is_open() == false){
+    cout <<"ERROR: Invalid file name. Please enter file name again."<<endl;
+  } else {
+    cout <<"Displaying all lines of instruction from "<<filename<<endl;
+    cout <<endl;
+    while (instrfile >> hex >> line){//reads the text in the file as hex and stores each one in an index of the memory array
+      memory[i] = line;
+      cout <<"Memory ["<<i<<"] = ";
+      cout.fill('0');
+      cout.width(4);
+      cout <<hex<<uppercase<<memory[i]<<right<<endl;
+      i++;
+      number++;
+    }
+    cout <<endl;
+  }
+  for(i=0;i<=number;i++){//runs through each index in memory array and actions the instructions accordingly
+    pc=i+1;//program counter keeps track of the next instruction
+    opcode = getopcode(memory[i]);//Gets the first digit from the instruction, which is the opcode
+    operand = getoperand(memory[i]);//Gets the last three digits of the instruction together, which are the operands
+    ir = (operand & 0xF00) >> 8; //Gets the first digit from the operand, which is the instruction register
+    secondNum = (operand & 0x0F0) >> 4;//Gets the second digit from the operand
+    thirdNum = operand & 0x00F;//Gets the third digit from the operand
+    lastTwo = operand & 0x0FF;//Gets the last two digits together from the operand
+    if(opcode == 14){//Ends the program
+      cout <<"Halt"<<endl;
+      break;
+    }
+    if(opcode == 1){//Loads the last two digits into the register that is ir
+      reg[ir] = lastTwo;
+      display(memory[i],ir);
+      cout<<reg[ir]<<" PC = "<<pc<<endl;
+    }
+    if(opcode == 2){//loads the register at the second digit of the instruction with the value of the register at the third digit of the instruction
+      reg[secondNum] = reg[thirdNum];
+      display(memory[i],ir);
+      cout <<reg[ir]<<" PC = "<<pc<<endl;
+    }
+    if(opcode == 3){//loads the register ir with the value in the memory location that is the last two digits of the instruction
+      reg[ir] = memory[lastTwo];
+      display(memory[i],ir);
+      cout <<reg[ir]<<" PC = "<<pc<<endl;
+    }
+    if(opcode == 4){//Stores the value in register ir in the memory location that is the last two digits of the instruction
+      temp = memory[i];
+      memory[lastTwo] = reg[ir];
+      cout <<temp<<" Memory["<<lastTwo<<"] = ";
+      cout.fill('0');
+      cout.width(4);
+      cout <<memory[lastTwo]<<" PC = "<<pc<<endl;
+    }
+    if(opcode == 6){//Adds together the value of the registers that are the second and third digits of the instruction, and loads the result in ir
+      reg[ir] = (reg[secondNum] + reg[thirdNum]) & 0xFFFF;
+      display(memory[i],ir);
+      cout <<reg[ir]<<" PC = "<<pc<<endl;
+    }
+    if (opcode == 7){//Negates the value in the register that is the second digit of the instruction
+      ir = secondNum;
+      reg[ir] = (reg[ir]*-1) & 0xFFFF;
+      display(memory[i],ir);
+      cout <<reg[ir]<<" PC = "<<pc<<endl;
+    }
+    if(opcode == 8){//shifts the value in register ir right as many bits as the lastTwo digits of instruction
+      reg[ir] = (reg[ir] >> lastTwo) & 0xFFFF;
+      display(memory[i],ir);
+      cout <<reg[ir]<<" PC = "<<pc<<endl;
+      }
+    if(opcode == 9){//shifts the value in register ir left as many bits as the lastTwo digits of instruction
+      reg[ir] = (reg[ir] << lastTwo) & 0xFFFF;
+      display(memory[i],ir);
+      cout <<reg[ir]<<" PC = "<<pc<<endl;
+    }
+    if(opcode == 10){//AND's the values in the registers that are second and third digits of the instruction, and loads the result in ir
+      reg[ir] = reg[secondNum] & reg[thirdNum];
+      display(memory[i],ir);
+      cout <<reg[ir]<<" PC = "<<pc<<endl;
+    }
+    if(opcode == 11){//OR's the values in the registers that are second and third digits of the instruction, and loads the result in ir
+      reg[ir] = reg[secondNum] | reg[thirdNum];
+      display(memory[i],ir);
+      cout <<reg[ir]<<" PC = "<<pc<<endl;
+    }
+    if(opcode == 12){//XOR's the values in the registers that are second and third digits of the instruction, and loads the result in ir
+      reg[ir] = reg[secondNum] ^ reg[thirdNum];
+      display(memory[i],ir);
+      cout <<reg[ir]<<" PC = "<<pc<<endl;
+    }
+    if(opcode == 13){//If register ir value is NOT equal to the value in register 0 then move on to next instruction.
+      if(reg[ir] != reg[0]){
+        display(memory[i],ir);
+        cout <<reg[ir]<<" PC = "<<pc<<endl;
+      } else{//else if regsiter ir value IS equal to the value in register 0, load the lastTwo digits of the instruction into the PC counter and jump to that instruction
+        temp = operand & 0x0FF;
+        display(memory[i],ir);
+        cout <<"JUMP to Memory Location ["<<temp<<"]"<<endl;
+        i = temp-1;//-1 because i will increase by one in the next loop in the for loop, so otherwise it will skip an extra instruction
+      }
+    }
+  }
+  instrfile.close();
+}
+
+int getopcode(int digitOne){
+  int d1;
+  d1 = (digitOne & 0xF000) >> 12;
+  return d1;
+}
+
+int getoperand(int lastDigits){
+  int d2;
+  d2 = lastDigits & 0x0FFF;
+  return d2;
+}
+
+void display(int memLocation, int instrReg){
+  cout <<memLocation<<" R"<<instrReg<<" = "<<right;
+  cout.fill('0');
+  cout.width(4);
+}
