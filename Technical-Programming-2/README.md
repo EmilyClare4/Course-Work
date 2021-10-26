@@ -1,0 +1,3 @@
+- ❓ Technical Programming 2 is the lead on from Technical Programming 1 and was completed in my second semester of my first year
+- 🔍 This course advances the programming knowledge to include abstract data types, recursion, pointers, and the foundations of object-oriented programming.
+- 🏫 Foundational Computer Science topics are also covered including bits, bytes, twos complement arithmetic, gates, logic circuits and an introduction to assembler programming.
