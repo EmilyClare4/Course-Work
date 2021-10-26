@@ -1,4 +1,3 @@
-//Emily Rutherford ID 21013503
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
