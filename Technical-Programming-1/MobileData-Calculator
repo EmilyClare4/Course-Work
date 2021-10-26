@@ -1,0 +1,70 @@
+//Emily Rutherford ID 21013503
+#include <iostream>
+#include <iomanip>
+#include <fstream>
+#include <string>
+using namespace std;
+
+void breakstring (string line);
+string getfile();
+
+int data, call, txt;
+fstream plans;
+string filename, line, name, number;
+
+int main(){
+  filename = getfile(); //Prompt user to enter file name
+  if (plans.is_open()== false){
+    cout <<"ERROR: not able to open "<<filename<<endl;
+  } else{
+    while (getline(plans, line)){
+      //read each line of the file and calculate the cost for each
+      breakstring(line);
+      cout<<name<<" ("<<number<<") "<<data<<"MB "<<call<<"mins "<<txt<<"txt";
+      cout<<" Plan costs $"<<setprecision(2)<<fixed<<((data * 0.1)+(call*0.04)+(txt*0.03))<<endl;
+    }
+  }
+}
+
+string getfile(){
+  string filepath;
+  cout <<"Enter the FULL name of the file: ";
+  cin >>filepath;
+  plans.open(filepath.c_str(), fstream::in);
+  return filepath;
+}
+
+void breakstring (string s){
+  //breaks the line into separate strings and turns data, call and txt strings into integers
+  int total, i=0;
+  name = "";
+  while (s[i] != ';'){
+    name = name + s[i];
+    i++;
+  }
+  i++;
+  number = "";
+  while (s[i] != ';'){
+    number = number + s[i];
+    i++;
+  }
+  i++;
+  data = 0;
+  while (s[i] != ';'){
+    data = data * 10 + s[i] - 48;
+    i++;
+  }
+  i++;
+  call = 0;
+  while (s[i] != ';'){
+    call = call * 10 + s[i] - 48;
+    i++;
+  }
+  i++;
+  txt = 0;
+  total = s.length();
+  while (i < total){
+    txt = txt * 10 + s[i] - 48;
+    i++;
+  }
+}
