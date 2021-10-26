@@ -1,0 +1,60 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+void ruler();
+string getmsg();
+
+int columnWidth = 40;
+
+int main(){
+  string justified;
+  int i, length;
+  justified = getmsg(); //check whether the entry is within the limits
+  length = justified.length();
+  while (length < columnWidth){
+    //if length of text is less than columnWidth
+    //find a space and insert another space, keep moving to next space until line length
+    //is equal to columnWidth
+    i=0;
+    while (i<length && length<columnWidth){
+      if (justified[i] == ' '){
+        justified.insert(i, 1, ' '); //insert 1 character space at position i in the string
+        length++;
+        while (justified[i] == ' '){ //move to next non-space character to avoid continuosly adding spaces to the same position
+          i++;
+        }
+      }
+      i++;
+    }
+  }
+  cout<<endl;
+  ruler();
+  cout<<endl<<justified<<endl;
+}
+
+void ruler(){
+  //This function creates the ruler to measure the justification
+  int i, pass;
+  for (pass=0; pass<4; pass++){
+    for (i=0; i<=9; i++){
+      cout <<i;
+    }
+  }
+}
+
+string getmsg(){
+  //This function requests, reads in and checks user entry is legal before passing to Main
+  int total;
+  string msg;
+  cout <<"Enter a line of text: ";
+  getline(cin, msg);
+  total = msg.length();
+  while (total > columnWidth){
+    cout <<"Error! Input must not be more than 40 characters. ";
+    cout <<"Please enter a new line. ";
+    getline(cin, msg);
+    total = msg.length();
+  }
+  return msg;
+}
