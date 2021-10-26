@@ -1,0 +1,56 @@
+#include <iostream>
+#include <iomanip>
+#include <cmath>
+using namespace std;
+
+int i, count;
+float average, total, difference;
+float voltages[6];
+bool problem;
+
+int main (){
+  problem = false;
+  //put the six voltages into an array
+  cout <<"Enter 6 voltages: ";
+  for (i=0; i<6; i++){
+    cin >> voltages[i];
+    total = total + voltages[i];
+  }
+  //calculate the average and 10% and 15% of the average and print these out
+  average = total/6.0;
+  cout <<"The average is "<<setprecision(1)<<fixed<<average<<" volts."<<endl;
+  cout <<endl<<endl;
+  cout <<"10% = "<<average*0.1<<" volts."<<endl;
+  cout <<"15% = "<<average*0.15<<" volts."<<endl;
+  //calculate the difference between each voltage and the average and whether it's more than 10%
+  for (i=0; i<6; i++){
+    difference = fabs(voltages[i] - average);
+    if (difference > average*0.1){
+      if (problem == false){
+        cout <<endl<<endl;
+        cout <<"The following problems occurred:"<<endl;
+        problem = true;
+      }
+      count++;
+      cout <<count<<". Voltage at hour "<<i+1<<" was "<<voltages[i]<<" volts (difference of "<<difference<<" volts)."<<endl;
+    }
+  }
+  //calculate the difference between each voltage and the average and whether it's more than 15%
+  for (i=0; i<5; i++){
+    difference = fabs(voltages[i] - voltages[i+1]);
+    if (difference > average*0.15){
+      if (problem == false){
+        cout <<endl<<endl;
+        cout <<"The following problems occurred:"<<endl;
+        problem = true;
+      }
+      count++;
+      cout <<count<<". Voltage change from hour "<<i+1<<" to hour "<<i+2<<" was "<<difference<<" volts."<<endl;
+    }
+  }
+  //if there are no errors to show
+  if (problem == false) {
+    cout <<endl<<endl;
+    cout <<"No problems were encountered."<<endl;
+  }
+}
