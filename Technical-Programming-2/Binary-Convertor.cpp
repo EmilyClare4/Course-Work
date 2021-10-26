@@ -1,4 +1,3 @@
-//Emily Rutherford ID 21013503
 #include<iostream>
 #include <string>
 using namespace std;
