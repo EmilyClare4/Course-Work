@@ -1,0 +1,105 @@
+#include <iostream>
+using namespace std;
+
+int difference, day, month, year, newd, diff1;
+int main(){
+  cout <<"Enter the difference in days: ";
+  cin >> difference;
+  cout <<"Enter a date in the form day month year: ";
+  cin >>day>>month>>year;
+  if ((month == 4) || (month == 6) || (month == 9) || (month == 11)){ /*Calculates for months with 30 days*/
+    if (day+difference > 30){ /*Moving into the next month*/
+      diff1 = 30 - day;
+      newd = difference - diff1;
+      cout <<"The final date is "<<newd<<" "<<month + 1<<" "<<year<<endl;
+    } else if (day+difference < 1){ /*Moving into the previous month*/
+      diff1 = day+difference;
+      newd = 31 + diff1;
+      cout <<"The final date is "<<newd<<" "<<month - 1<<" "<<year<<endl;
+    } else if ((day >=1) && (day <=30)){ /*Staying in the same month*/
+      newd = day+difference;
+        if (newd>=0){
+          cout <<"The final date is "<<newd<<" "<<month<<" "<<year<<endl;
+        }
+    }
+   }
+  if ((month == 1) || (month == 5) || (month == 7) || (month == 8) || (month == 10) || (month == 12)){ /*Calculates for months with 31 days*/
+    if ((day+difference > 31) && (month !=12)){ /*Moving into the next month, except December*/
+      diff1 = 31 - day;
+      newd = difference - diff1;
+      cout <<"The final date is "<<newd<<" "<<month + 1<<" "<<year<<endl;
+    } else if ((day+difference > 31) && (month ==12)){ /*Moving into the next year*/
+      diff1 = 31 - day;
+      newd = difference - diff1;
+      cout <<"The final date is "<<newd<<" "<<month - 11<<" "<<year + 1<<endl;
+    } else if ((month == 8) && (day+difference < 1)){ /*Moving into the previous month, with month prior having 31 days*/
+      diff1 = day+difference;
+      newd = 31 + diff1;
+      cout <<"The final date is "<<newd<<" "<<month - 1<<" "<<year<<endl;
+    } else if (((month == 5) || (month == 7) ||(month == 10) || (month == 12)) && ((day+difference < 1))){ /*Moving into the previous month, with month prior having 30 days*/
+      diff1 = day+difference;
+      newd = 30 + diff1;
+      cout <<"The final date is "<<newd<<" "<<month - 1<<" "<<year<<endl;
+    } else if ((month == 1) && (day+difference < 1)){ /*Moving into the previous year*/
+      diff1 = day+difference;
+      newd = 31 + diff1;
+      cout <<"The final date is "<<newd<<" "<<month + 11<<" "<<year - 1<<endl;
+    } else if ((day >=1) && (day <=31)){  /*Staying in the same month*/
+      newd = day+difference;
+        if (newd>=0){
+          cout <<"The final date is "<<newd<<" "<<month<<" "<<year<<endl;
+        }
+    }
+  }
+  if (month == 2){
+    if (day+difference < 1){ /*Moving to the previous month from February*/
+      diff1 = day+difference;
+      newd = 31 + diff1;
+      cout <<"The final date is "<<newd<<" "<<month - 1<<" "<<year<<endl;
+    }
+    if (((year % 4 == 0) && (year % 100 !=0)) || (year % 400 ==0)){ /*Calculates February in leapyear and then non-leapyear*/
+      if (day+difference > 29){ /*Leapyear moving to a new month*/
+        diff1 = 29 - day;
+        newd = difference - diff1;
+        cout <<"The final date is "<<newd<<" "<<month + 1<<" "<<year<<endl;
+      } else if ((day >=1) && (day <=29)){
+        newd = day+difference;
+          if (newd>=0){ /*Leapyear staying in the same month*/
+            cout <<"The final date is "<<newd<<" "<<month<<" "<<year<<endl;
+          }
+     }
+    } else if (day+difference > 28){ /*Non-leapyear moving to a new month*/
+      diff1 = 28 - day;
+      newd = difference - diff1;
+      cout <<"The final date is "<<newd<<" "<<month + 1<<" "<<year<<endl;
+    } else if ((day >=1) && (day <=28)){
+      newd = day+difference;
+        if (newd>=0){ /*Non-leapyear staying in the same month*/
+          cout <<"The final date is "<<newd<<" "<<month<<" "<<year<<endl;
+        }
+    }
+  }
+  if (month == 3){
+    if (day+difference > 31){ /*Moving into the next month*/
+     diff1 = 31 - day;
+     newd = difference - diff1;
+     cout <<"The final date is "<<newd<<" "<<month + 1<<" "<<year<<endl;
+   } else if ((day >=1) && (day <=31)){  /*Staying in the same month*/
+     newd = day+difference;
+       if (newd>=1){
+         cout <<"The final date is "<<newd<<" "<<month<<" "<<year<<endl;
+       }
+   }
+  if (((year % 4 == 0) && (year % 100 !=0)) || (year % 400 ==0)){ /*March moving to previous month in a leapyear*/
+    if (day+difference < 1) {
+      diff1 = day+difference;
+      newd = 29 + diff1;
+      cout <<"The final date is "<<newd<<" "<<month - 1<<" "<<year<<endl;
+    }
+  } else if (day+difference < 1){ /*March moving to previous month in a non-leapyear*/
+    diff1 = day+difference;
+    newd = 28 + diff1;
+    cout <<"The final date is "<<newd<<" "<<month - 1<<" "<<year<<endl;
+  }
+ }
+}
