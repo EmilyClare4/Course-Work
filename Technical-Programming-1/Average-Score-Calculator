@@ -1,0 +1,40 @@
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+int judge, count;
+float mark, temp, total, average, highest, lowest;
+
+int main (){
+  //Section 1 enter the number of judges and check whether number is valid
+  cout <<"Enter number of judges: ";
+  cin >> judge;
+  while ((judge < 4) || (judge > 8)){
+    cout <<"Invalid: Enter number of judges again (4 to 8): ";
+    cin >> judge;
+  }
+  total = 0;
+  highest = 0;
+  lowest = 10;
+  //section 2 enter the marks and check whether the entry is valid
+  for (count = 0; count < judge; count ++){
+    cout <<"Enter mark: ";
+    cin >> mark;
+    while ((mark < 0) || (mark > 10)){
+      cout <<"ERROR: mark must be between 0.0 and 10.0: ";
+      cin >> mark;
+    }
+    if (mark > highest){
+      highest = mark;
+    }
+    if (mark < lowest){
+        lowest = mark;
+    }
+    total +=mark;
+  }
+  //section 3 remove highest and lowest marks and calculate average from the remaining marks
+  mark = total - (highest + lowest);
+  temp = judge;
+  average = mark / (temp - 2.0);
+  cout <<"Final mark: "<<setprecision(2)<<fixed<<average<<endl;
+}
